@@ -21,7 +21,7 @@ myApp.service('SongsService', function($http, $q){
 
             var deferred = $q.defer();
 
-            $http.post('/songs')
+            $http.post('/api/songs')
                 .then(
                     function(response){
                         deferred.resolve(response.data);
@@ -37,7 +37,7 @@ myApp.service('SongsService', function($http, $q){
             var deferred = $q.defer();
             var username = result.username;
 
-            $http.put('/saveResult/' + username, result).then(
+            $http.put('/api/saveResult/' + username, result).then(
                 function(response){
                     deferred.resolve(response.data);
                 },
@@ -93,7 +93,7 @@ myApp.service('ResultService', function($http, $q){
 
             var deferred = $q.defer();
 
-            $http.get('/results').then(
+            $http.get('/api/results').then(
                 function(response){
                     deferred.resolve(response.data);
                 },
@@ -108,7 +108,7 @@ myApp.service('ResultService', function($http, $q){
         getAllResults: function(){
             var deferred = $q.defer();
            
-            $http.get('/results').then(
+            $http.get('/api/results').then(
                 function(response){
                     deferred.resolve(response.data);
                 },
@@ -122,7 +122,7 @@ myApp.service('ResultService', function($http, $q){
         getResultByUsername: function(username){
             var deferred = $q.defer();
            
-            $http.get('/result/' + username).then(
+            $http.get('/api/result/' + username).then(
                 function(response){
                     deferred.resolve(response.data);
                 },
@@ -136,7 +136,7 @@ myApp.service('ResultService', function($http, $q){
         getActualResult: function(){
             var deferred = $q.defer();
 
-            $http.get('/result/actualResult').then(
+            $http.get('/api/result/actualResult').then(
                 function(response){
                     deferred.resolve(response.data);
                 },
@@ -150,7 +150,7 @@ myApp.service('ResultService', function($http, $q){
         getGroupByCount: function(username){
             var deferred = $q.defer();
            
-            $http.get('/groupByCount/' + username).then(
+            $http.get('/api/groupByCount/' + username).then(
                 function(response){
                     deferred.resolve(response.data);
                 },

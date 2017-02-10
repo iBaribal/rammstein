@@ -132,7 +132,7 @@ apiRoutes.get('/songs', function(req, res){
     });
 });
 
-app.put('/saveResult/:username', function(req, res){
+apiRoutes.put('/saveResult/:username', function(req, res){
 
 
   var result = new Result();
@@ -171,14 +171,14 @@ apiRoutes.get('/check', function(req, res) {
 	res.json(req.decoded);
 });
 
-app.get('/results', function(req, res){
+apiRoutes.get('/results', function(req, res){
   Result.find({}, function(err, results){
     //console.log(results);
     res.json(results);
   });
 });
 
-app.get('/result/:username', function(req,res){
+apiRoutes.get('/result/:username', function(req,res){
 
   Result.findOne({username: req.params.username}, function(err, result){
      if(err){
@@ -195,7 +195,7 @@ app.get('/result/:username', function(req,res){
 
 
 
-app.get('/groupByCount/:username', function(req,res){
+apiRoutes.get('/groupByCount/:username', function(req,res){
 
   var agg = [
     { $match: {'username': req.params.username}},
@@ -219,7 +219,7 @@ Result.aggregate(agg, function(err,result){
 });
 
 
-app.get('/result/actualResult', function(req, res){
+apiRoutes.get('/result/actualResult', function(req, res){
 
   Result.findOne({username: 'actualResult'}, function(err, result){
     console.log(result);
