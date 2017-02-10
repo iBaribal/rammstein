@@ -1,0 +1,281 @@
+<h3>
+  <strong>RAMMS<icon class="glyphicon glyphicon-plus"></icon>EIN</strong> TALLINN 2017
+  <md-button class="pull-right md-primary" ng-click="logout()">Logout</md-button>
+  <h4>Logged In As {{ currentUser }}</h4>
+</h3>
+<hr>
+
+<!--div class="badge">
+    <md-input-container>
+            {{selectedSongs.length}} of {{ maximumSongsSelect }}
+    </md-input-container>
+</div-->
+
+<div style="visibility: hidden">
+    <div class="md-dialog-container" id="myDialog">
+      <md-dialog layout-padding>
+        <h2>RAMMSTEIN POLL INFO</h2>
+        <p>
+          1) Choose an album and songs from dropdown below. You can choose up to 30 songs. You have to choose atleast 10 songs.<br>
+          2) Switch to second tab and choose answers to questions. Be noted that first/last song questions' take your chosen songs as answer options.<br>
+          3) You can submit form only once and only if You have chosen right amount of songs and answered all questions.<br>
+          <h4>POINTS</h4>
+          * Each song has a weight value which shows how many points you'll get if correct.<br>
+          * Each questions correct answer will give exactly 1 point.<br>
+          <br>
+          <h4>Hidden points:</h4>
+          * 2 points for right amount of songs played. <br>
+          * -1 points for each song guessed more/less than actual total songs played. (Ex: Rammstein played 5 songs but you guessed 10 -> that's -5 points xD) <br>
+          <br>
+          <h5>Note:</h5>
+          * After submitting your form you will be automatically logged out. After loggin back in you can see your submission. <br>
+          * After Concert final result will be also posted and then you can compare your result with actual result and other users.
+        </p>
+      </md-dialog>
+    </div>
+</div>
+
+
+<md-input-container layout="row">
+  <md-button class="md-primary md-raised" ng-click="showPrerenderedDialog($event)" >
+    HELP
+  </md-button>
+
+  <span flex></span>
+  <md-button class="md-raised md-warn" ng-hide="submitted" ng-disabled="!isValid()" ng-click="save()" md-directoin="right">
+    SUBMIT
+  </md-button>
+</md-input-container>
+
+<span>{{message}}</span>
+<md-progress-circular class="pull-right md-warn" ng-show="submitted" md-diameter="40px" md-mode="indeterminate"></md-progress-circular>
+
+<hr>
+
+<md-tabs md-dynamic-height md-border-bottom md-on-select="onTabChanges(selectedTabIndex)" md-selected="selectedTabIndex">
+  
+  <md-tab label="SONGS" ng-disabled="showResult">
+  <br>
+      <div layout="row">
+        <md-input-container class="col-md-6">
+          <label>ALBUMS</label>
+          <md-select ng-model="selectedAlbum" ng-disabled="isMaximumSongsAmount()" aria-label="hide">
+              <md-option ng-value="album" ng-repeat="album in albums" placeholder="album">{{album}}</md-option>
+          </md-select>
+        </md-input-container>
+        <md-input-container class="col-md-6">
+          <label>SONGS</label>
+          <md-select ng-model="selectedSongs" ng-disabled="!selectedAlbum && !isMaximumSongsAmount()" aria-label multiple>
+              <md-option ng-value="song" ng-repeat="song in songs | filter: {album: selectedAlbum} ">{{song.title}}</md-option>
+          </md-select>
+        </md-input-container>
+        
+      </div>
+      <!--p ng-if="selectedSongs">You selected songs: {{selectedSongs}}</p><hr-->
+ 
+
+  <table class="table table-inverse text-center">
+    <thead>
+      <tr>
+        <th class="col-md-2">#</th>
+        <th class="col-md-4 text-center">Title</th>
+        <th class="col-md-4 text-center">Album</th>
+        <th class="col-md-2 text-center">Remove</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="song in selectedSongs">
+        <th text-center>{{$index + 1}}</th>
+        <td text-center>{{song.title}} <span class="badge">{{ song.weight }}</span></td>
+        <td text-center>{{song.album}}</td>
+        <td text-center><i class="glyphicon glyphicon-trash" ng-click="remove($index)"></td>
+      </tr>
+    </tbody>
+  </table>
+  </md-tab>
+
+  <!-- QUESTIONS TAB --> 
+
+  <md-tab label="Questions" ng-disabled="showResult">
+    <br>
+    <form name="myForm">
+      <div layout="row">
+          <div class="col-md-12">
+            <div layout="row" ng-repeat="q in questions">
+                <div class="col-md-6">
+                <md-input-container class="md-block" flex-gt-sm>
+                  <label>{{q.question}}</label>
+                  <md-select ng-model="q.selectedValue" required>
+                      <md-option ng-value="a" ng-repeat="a in q.answer">{{a}}</md-option>
+                  </md-select>
+                </md-input-container>
+                </div>
+            </div>
+          </div>
+      </div>
+    </form>
+  </md-tab>
+  <!-- end questions tab -->
+
+
+  <!-- OVERVIEW TAB -->
+  <md-tab label="Results" ng-if="showResult">
+    <br>
+    <div class="col-md-12" style="margin-bottom: 100px">
+      <div layout="row">
+        <md-input-container class="md-block" flex-gt-sm>
+          <div class="col-md-12"><h2 class="text-center">FINAL RESULTS</h2></div>
+
+          <table class="table table-default text-center">
+            <thead class="table-inverse">
+                  <tr>
+                    <th class="col-md-2 text-center"></th>
+                    <th class="col-md-2 text-center">Song</th>
+                    <th class="col-md-2 text-center">Questions</th>
+                    <th class="col-md-2 text-center">Bonus</th>
+                    <th class="col-md-2 text-center">Penalty</th>
+                    <th class="col-md-2 text-center">TOTAL</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="result in allPoints | orderBy:'-total' " ng-style="result.username==currentUser?{'font-weight':'bold'}:''">
+                    
+                    <td text-center>{{result.username}}</th>
+                    <td text-center>{{result.songsSum}}</td>
+                    <td text-center>{{result.questionsSum}}</td>
+                    <td text-center style="color:green">{{result.bonus}}</td>
+                    <td text-center style="color:red">{{result.penalty}}</td>
+                    <td text-center>{{result.total}}</td>
+                  </tr>
+
+          </table>
+
+        </md-input-container>
+      </div>
+    </div>
+  </md-tab>
+
+  <md-tab label="Overview" ng-if="showResult">
+    <br>
+    
+    <div class="col-md-12" style="margin-bottom:100px;">
+      <div layout="row">
+          <div class="col-md-6">
+            <md-input-container class="md-block" flex-gt-sm>
+              <div class="col-md-12"><h2>Your Result:</h2></div>
+              <table class="table table-default text-center">
+                <thead class="table-inverse">
+                  <tr>
+                    <th class="col-md-2">#</th>
+                    <th class="col-md-4 text-center">Song</th>
+                    <th class="col-md-4 text-center">WEIGHT</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="song in result.songs" ng-class="exists(song,'song') ? 'success' : 'danger'">
+                    
+                    <td> {{$index + 1}}</th>
+                    <td text-center>{{song.title}} </td>
+                    <td text-center>{{song.weight}}</td>
+                  </tr>
+              
+                  <thead>
+                    <td><strong>Total</strong></td>
+                    <td><strong>{{ songsResultSum | number }} / {{ actualSongSum | number }}</strong></td>
+                    <td></td>
+                  </thead>
+                </tbody>
+  
+              </table>
+
+              <!--questions-->
+              <table class="table table-default text-center">
+                <thead class="table-inverse">
+                  <tr>
+                    <th class="col-md-2">#</th>
+                    <th class="col-md-4 text-center">Question</th>
+                    <th class="col-md-4 text-center">Answer</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="question in result.questions" ng-class="exists($index,'question') ? 'success' : 'danger'">
+                    <td>{{$index + 1}}</th>
+                    <td text-center>{{question.question}} </td>
+                    <td text-center>{{question.selectedValue}}</td>
+                  </tr>
+              
+                  <thead>
+                    <td><strong>Total</strong></td>
+                    <td><strong>{{ questionResultSum | number}} / {{ actualQuestionsSum | number }}</strong></td>
+                    <td></td>
+                  </thead>
+                </tbody>
+              </table>
+
+            </md-input-container>
+
+      </div>
+
+      <!--actual Result-->
+      <div class="col-md-6">
+            <md-input-container class="md-block" flex-gt-sm>
+              <div class="col-md-12"><h2>Rammstein result</h2></div>
+              <table class="table table-default text-center">
+                <thead class="table-inverse">
+                  <tr>
+                    <th class="col-md-2">#</th>
+                    <th class="col-md-4 text-center">Song</th>
+                    <th class="col-md-4 text-center">WEIGHT</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="song in actualResult.songs">
+                    <td>{{$index + 1}}</th>
+                    <td text-center>{{song.title}} </td>
+                    <td text-center>{{song.weight}}</td>
+                  </tr>
+              
+                  <thead class="table-default">
+                    <td><strong>Total</strong></td>
+                    <td><strong>{{ actualSongSum | number }} </strong></td>
+                    <td></td>
+                  </thead>
+                </tbody>
+              </table>
+
+              <!--questions-->
+              <table class="table table-default text-center">
+                <thead class="table-inverse">
+                  <tr>
+                    <th class="col-md-2">#</th>
+                    <th class="col-md-4 text-center">Question</th>
+                    <th class="col-md-4 text-center">Answer</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="question in actualResult.questions">
+                    <td>{{$index + 1}}</th>
+                    <td text-center>{{question.question}} </td>
+                    <td text-center>{{question.selectedValue}}</td>
+                  </tr>
+              
+                  <thead class="table-default">
+                    <td><strong>Total</strong></td>
+                    <td><strong>{{ actualQuestionsSum | number }} </strong></td>
+                    <td></td>
+                  </thead>
+                </tbody>
+              </table>
+              
+            </md-input-container>
+
+    
+      </div>
+    </div>
+
+ 
+
+  
+  </md-tab>
+
+</md-tabs>
