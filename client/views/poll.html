@@ -45,10 +45,12 @@
   <md-button class="md-raised md-warn" ng-hide="submitted" ng-disabled="!isValid()" ng-click="save()" md-directoin="right">
     SUBMIT
   </md-button>
+
+  <span>{{message}}</span>
+  <md-progress-circular class="pull-right md-warn" ng-show="submitted" md-diameter="40px" md-mode="indeterminate"></md-progress-circular>
 </md-input-container>
 
-<span>{{message}}</span>
-<md-progress-circular class="pull-right md-warn" ng-show="submitted" md-diameter="40px" md-mode="indeterminate"></md-progress-circular>
+
 
 <hr>
 

@@ -234,7 +234,6 @@ myApp.controller('PollController', function(ResultService, LoginService, SongsSe
                 $scope.questionResultSum = questionResultSum;
                 $scope.sum = songsResultSum + questionResultSum - calculatePenalty($scope.result.songs);
 
-                console.log("getResultByUsername finished...");
             },
             function(errResponse){
                 $scope.showResult = false;
@@ -266,7 +265,6 @@ myApp.controller('PollController', function(ResultService, LoginService, SongsSe
                 $scope.actualQuestionsSum = actualQuestionsSum;
                 
                 $scope.maxSum = actualQuestionsSum + actualSongSum;
-                console.log('getActualResult finished...');
             },
             function(errResponse){
                 console.log('actual result not available');
@@ -320,7 +318,6 @@ myApp.controller('PollController', function(ResultService, LoginService, SongsSe
             songSelection[i] = $scope.selectedSongs[i].title;
         }
 
-        console.log(songSelection);
         update();
     }
 
@@ -429,7 +426,6 @@ myApp.controller('PollController', function(ResultService, LoginService, SongsSe
 
     var generateFinalResult = function(){
 
-        console.log($scope.myForm);
 
         // get Songs
         ResultService.getAllResults().then(
@@ -459,7 +455,6 @@ myApp.controller('PollController', function(ResultService, LoginService, SongsSe
                 //console.log(allPoints);
                 $scope.allPoints = allPoints;
 
-                console.log("generateFinalResult finished...");
             },
             function(errResponse){
                 console.log('Error fetching all results...');
