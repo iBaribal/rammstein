@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 var morgan = require('morgan');
 var path = require('path');
 
-var port = process.env.port || 3000;
+var port = process.env.port;
 
 var jwt = require('jsonwebtoken');
 var config = require('./config');
