@@ -138,6 +138,7 @@ myApp.controller('PollController', function(ResultService, LoginService, SongsSe
     var update = function(){
         $scope.questions[0].answer = songSelection;
         $scope.questions[1].answer = songSelection;
+
         $scope.questions = questions;
     };
 
@@ -180,7 +181,6 @@ myApp.controller('PollController', function(ResultService, LoginService, SongsSe
 
         );
     };
-
 
     var compareSongResult = function(result){
 
@@ -311,6 +311,14 @@ myApp.controller('PollController', function(ResultService, LoginService, SongsSe
     $scope.remove = function(index){
 
 
+        if($scope.selectedSongs[index].title == questions[0].selectedValue){
+            questions[0].selectedValue = "";
+        }
+        
+        if($scope.selectedSongs[index].title == questions[1].selectedValue){
+            questions[1].selectedValue = "";
+        }
+
         $scope.selectedSongs.splice(index, 1);
         songSelection = [];
 
@@ -345,27 +353,32 @@ myApp.controller('PollController', function(ResultService, LoginService, SongsSe
 
        $scope.submitted = true;
 
+
         var result = {
             username: $localStorage.currentUser.username,
             songs: $scope.selectedSongs,
             questions:questions
         };
 
-        SongsService.save(result).then(
-            function(response){
-                $timeout(function(){
-                    $scope.submitted = false;
-                    $scope.message = 'Thank You for Respose! You will be logged out now...';
-                    var hasVoted = true;
-                    LoginService.logout();
-                },2000);
-                
-            },
-            function(errResponse){
-                console.log('error!');
-            }
-        );
-
+        if($scope.myForm.$valid && $scope.selectedSongs.length > 5 && $scope.selectedSongs.length < 30){
+            SongsService.save(result).then(
+                function(response){
+                    $timeout(function(){
+                        $scope.submitted = false;
+                        $scope.message = 'Thank You for Respose! You will be logged out now...';
+                        var hasVoted = true;
+                        LoginService.logout();
+                    },2000);
+                    
+                },
+                function(errResponse){
+                    console.log('error!');
+                }
+            );
+        }else{
+            $scope.submitted = false;
+            console.log('error submitting form...');
+        }
 
        
     };

@@ -7,3 +7,5 @@ body{
     padding: 30px;
     margin-bottom:100px;
 }
+
+md-tab:nth-child(2){background: green; } 

@@ -1,4 +1,4 @@
-var myApp = angular.module('myApp', ['ngRoute', 'ngMaterial', 'ngStorage']);
+var myApp = angular.module('myApp', ['ngRoute', 'ngMaterial', 'ngStorage','ngMessages']);
 
 myApp.config(function($routeProvider, $mdIconProvider, $mdAriaProvider){
 

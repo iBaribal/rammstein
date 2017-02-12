@@ -16,24 +16,27 @@
         </md-toolbar>
         <br>
         <md-card-content>
-          <form name="Form">
+          <form name="Form" ng-submit="login()">
+            
             <md-input-container class="md-block">
               <label>Login</label>
-              <input type="text" name="email" ng-model="vm.formData.email" placeholder="login" required=""/>
-              <div ng-messages="Form.email.$error" role="alert" multiple="">
-                <div ng-message="required" class="my-message">Please enter your email.</div>
+              <input type="text" name="email" ng-model="vm.formData.email" ng-required="true"/>
+              <div ng-messages="Form.email.$error">
+                <div ng-message="required">This is required.</div>
               </div>
             </md-input-container>
+            <br>
             <md-input-container class="md-block">
               <label>Password</label>
-              <input type="password" name="password" ng-model="vm.formData.password" placeholder="password" required="" md-maxlength="16"/>
-              <div ng-messages="Form.password.$error" role="alert" multiple="">
-                <div ng-message="required" class="my-message">Please enter your password.</div>
+              <input ng-model="vm.formData.password" type="password" name="password" ng-required="true">
+              <div ng-messages="Form.password.$error">
+                <ng-message when="required" translate>Please enter your password</ng-message>
               </div>
             </md-input-container>
-            <md-button ng-disabled="!Form.$valid" ng-click="login()" class="md-raised" style="color:white;background-color:black">&nbsp Login &nbsp</md-button>
+
+            <md-button class="md-primary" ng-disabled="!Form.$valid"  class="md-raised" type="submit" style="color:black" >&nbsp Login &nbsp</md-button>
           </form>
         </md-card-content>
       </md-card>
-    </md-content>
-    <!-- Angular Material Dependencies-->
+      
+</md-content>
