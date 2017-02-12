@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 var morgan = require('morgan');
 var path = require('path');
 
-var port = process.env.port;
+var port = process.env.PORT;
 
 var jwt = require('jsonwebtoken');
 var config = require('./config');
@@ -255,5 +255,5 @@ apiRoutes.post('/saveResult', function(req, res){
 
 app.use('/api', apiRoutes);
 
-app.listen(port);
+app.listen(process.env.PORT);
 console.log('Running server on port '+port+'...');
