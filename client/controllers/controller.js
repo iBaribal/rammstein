@@ -234,6 +234,7 @@ myApp.controller('PollController', function(ResultService, LoginService, SongsSe
                 $scope.questionResultSum = questionResultSum;
                 $scope.sum = songsResultSum + questionResultSum - calculatePenalty($scope.result.songs);
 
+                generateFinalResult();
             },
             function(errResponse){
                 $scope.showResult = false;
@@ -265,6 +266,8 @@ myApp.controller('PollController', function(ResultService, LoginService, SongsSe
                 $scope.actualQuestionsSum = actualQuestionsSum;
                 
                 $scope.maxSum = actualQuestionsSum + actualSongSum;
+
+                getResultByUsername();
             },
             function(errResponse){
                 console.log('actual result not available');
@@ -439,7 +442,6 @@ myApp.controller('PollController', function(ResultService, LoginService, SongsSe
 
     var generateFinalResult = function(){
 
-
         // get Songs
         ResultService.getAllResults().then(
             function(response){
@@ -474,12 +476,10 @@ myApp.controller('PollController', function(ResultService, LoginService, SongsSe
             }
         );
     };
-
+    
     getActualResult();
     getSongs();
-    getResultByUsername();
-    generateFinalResult();
-    
+
 })
 .controller('QuestionsController', ['$scope', function($scope){
     $scope.title = "This is questions controller";
