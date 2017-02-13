@@ -105,8 +105,8 @@ myApp.controller('PollController', function(ResultService, LoginService, SongsSe
             "selectedValue":""
         },
         {
-            "question":"Will Flake be tortured / bullied during live?",
-            "answer": ['Yes','No'],
+            "question":"How many songs in Encore?",
+            "answer": [0,1,2,3,4,5,6,7],
             "weight": 1,
             "selectedValue":""
         },
@@ -119,7 +119,7 @@ myApp.controller('PollController', function(ResultService, LoginService, SongsSe
     ];
 
     $scope.isValid = function(){
-        return $scope.selectedSongs.length > 5 && $scope.selectedSongs.length < 30 && $scope.myForm.$valid;
+        return $scope.selectedSongs.length > 10 && $scope.selectedSongs.length < 30 && $scope.myForm.$valid;
     }
 
     // update questions' answers when song selection changes
@@ -360,7 +360,7 @@ myApp.controller('PollController', function(ResultService, LoginService, SongsSe
             questions:questions
         };
 
-        if($scope.myForm.$valid && $scope.selectedSongs.length > 5 && $scope.selectedSongs.length < 30){
+        if($scope.myForm.$valid && $scope.selectedSongs.length > 10 && $scope.selectedSongs.length < 30){
             SongsService.save(result).then(
                 function(response){
                     $timeout(function(){
