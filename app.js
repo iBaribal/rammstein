@@ -254,5 +254,5 @@ apiRoutes.post('/saveResult', function(req, res){
 
 app.use('/api', apiRoutes);
 
-app.listen(3000);
-console.log('Running server on port '+3000+'...');
+app.listen(process.env.PORT);
+console.log('Running server on port '+process.env.PORT+'...');
